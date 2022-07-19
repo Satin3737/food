@@ -165,6 +165,10 @@ a {
 .tabcontent {
   width: 850px;
   position: relative;
+  display: none;
+}
+.tabcontent.active {
+  display: block;
 }
 .tabcontent img {
   width: 100%;
@@ -200,7 +204,6 @@ a {
   border-left: 1px solid black;
 }
 .tabheader__item {
-  font-weight: bold;
   font-size: 18px;
   font-weight: 300;
   margin-top: 10px;
@@ -208,7 +211,7 @@ a {
   cursor: pointer;
   transition: 0.3s all;
 }
-.tabheader__item_active {
+.tabheader__item.active {
   color: #000;
   font-size: 22px;
   font-weight: 700;
