@@ -3,11 +3,20 @@
     top: 0;
     left: 0;
     z-index: 1050;
-    display: none;
+    display: block;
     width: 100%;
     height: 100%;
     overflow: hidden;
     background-color: rgba(0,0,0,.5);
+    transition: all 0.4s;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    &.opened {
+        visibility: visible;
+        opacity: 1;
+        pointer-events: auto;
+    }
     &__dialog {
         max-width: 500px;
         margin: 40px auto;
