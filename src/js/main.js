@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const pageBody = document.querySelector('body');
     const modal = document.querySelector('[data-modal="modal"]');
     const modalBtn = document.querySelectorAll('[data-modal="btn"]');
-    const modalClose = document.querySelector('[data-modal="close"]');
+    const modalSpinner = document.querySelector('[data-modal="spinner"]');
 
     // timer for open modal
     const modalTimer = setTimeout(openModal, 10000);
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     modal.addEventListener('click', (e) => {
-       if (e.target && e.target === modal || e.target === modalClose) {
+       if (e.target && e.target === modal || e.target.getAttribute('data-modal') === 'close') {
            closeModal();
        }
     });
@@ -205,6 +205,83 @@ document.addEventListener('DOMContentLoaded', () => {
         'menu__item',
         'test-class1',
     ).renderCard();
+
+
+    // forms
+    const forms = document.querySelectorAll('form');
+
+    forms.forEach(form => {
+       postData(form);
+    });
+
+    const message = {
+        success: 'все ок',
+        failure: 'потрачено'
+    }
+
+    function postData(form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            modalSpinner.style.display = 'block';
+
+            const request = new XMLHttpRequest();
+            request.open('POST', '../server.php');
+
+            // RequestHeader dont need if we posting standard data from FormData
+            // request.setRequestHeader('Content-type', 'multipart/form-data');
+
+            request.setRequestHeader('Content-type', 'application/json');
+
+            const object = {};
+            const formData = new FormData(form);
+
+            formData.forEach((value, i) => {
+               object[i] = value;
+            });
+
+            const json = JSON.stringify(object);
+
+            // request.send(formData);
+            request.send(json);
+
+            request.addEventListener('load', () => {
+                if (request.status === 200) {
+                    console.log(request.response);
+                    showThanksModal(message.success);
+                    form.reset();
+                    modalSpinner.style.display = 'none';
+
+                } else {
+                    showThanksModal(message.failure);
+                    modalSpinner.style.display = 'none';
+                }
+            })
+
+        });
+    }
+
+    function showThanksModal(message) {
+        const previousModalDialog = document.querySelector('.modal__dialog');
+        previousModalDialog.style.display = 'none';
+        openModal();
+        const thanksModal = document.createElement('div');
+        thanksModal.classList.add('modal__dialog');
+        thanksModal.innerHTML = `
+            <div class="modal__content">
+                <div data-modal="close" class="modal__close">&times;</div>
+                <div class="modal__title">${message}</div>
+            </div>
+        `;
+        modal.append(thanksModal);
+
+        setTimeout(() => {
+            thanksModal.remove();
+            closeModal();
+            previousModalDialog.style.display = 'block';
+        }, 5000);
+    }
+
 
 });
 

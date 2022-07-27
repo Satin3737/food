@@ -61,6 +61,10 @@
         padding: 0 20px;
         outline: none;
     }
+    &__spinner {
+        display: none;
+        margin: 8px auto 0;
+    }
     .btn {
         display: block;
         width: 280px;
